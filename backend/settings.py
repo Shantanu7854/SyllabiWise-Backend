@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-6mf0p#%mny3+-17-hu25p6k@+3yc9u0zhi#4sd2j0wq11%3^n&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['syllabiwise-backend.onrender.com']
 
 
 # Application definition
