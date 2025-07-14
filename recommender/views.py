@@ -9,11 +9,21 @@ import re
 
 from dotenv import load_dotenv
 from .mongo import collection
+from django_ratelimit.decorators import ratelimit
+from django.utils.decorators import method_decorator
+from django.http import JsonResponse
 
-# Load environment variables
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
+# Optional: handle rate-limit errors
+def rate_limited(request, exception=None):
+    return JsonResponse({
+        "error": "Rate limit exceeded. Please try again later."
+    }, status=429)
+
+
+@method_decorator(ratelimit(key='ip', rate='5/h', method='POST', block=True), name='post')
 class PlaylistAnalyzeView(APIView):
     def post(self, request):
         playlist_url = request.data.get("playlist_url")
@@ -61,15 +71,11 @@ class PlaylistAnalyzeView(APIView):
             raw_output = response.text
             print("📥 Gemini raw output:\n", raw_output)
 
-            # 🔧 Remove Markdown-style code block if present
+            # Remove Markdown code blocks like ```python\n...\n```
             code_block_pattern = re.compile(r"```(?:python)?\n(.*?)```", re.DOTALL)
             match = code_block_pattern.search(raw_output)
-            if match:
-                clean_output = match.group(1)
-            else:
-                clean_output = raw_output
+            clean_output = match.group(1) if match else raw_output
 
-            # Safely parse the structured response
             parsed_response = ast.literal_eval(clean_output.strip())
 
         except Exception as e:
@@ -94,5 +100,5 @@ class PlaylistAnalyzeView(APIView):
                 status=500
             )
 
-        # Step 5: Return clean API response
+        # Step 5: Return response to frontend
         return Response({"recommendations": parsed_response}, status=200)

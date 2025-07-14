@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-6mf0p#%mny3+-17-hu25p6k@+3yc9u0zhi#4sd2j0wq11%3^n&
 DEBUG = True
 
 ALLOWED_HOSTS = ['syllabiwise-backend.onrender.com']
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -113,6 +114,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+RATELIMIT_VIEW = 'recommender.views.rate_limited'
 
 
 # Static files (CSS, JavaScript, Images)
