@@ -142,6 +142,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  #for Vite
-    # "https://your-frontend.vercel.app",  #if deployed later
+    "https://syllabi-wise-frontend.vercel.app",  #deployed
 ]
 
